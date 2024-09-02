@@ -24,7 +24,6 @@ import java.util.List;
 public class DevToolsClient implements ClientModInitializer {
 
     public static DevToolsClient INSTANCE;
-
     private final KeyBinding showNBTKeyBinding;
     private boolean showNBT;
 
@@ -48,42 +47,50 @@ public class DevToolsClient implements ClientModInitializer {
 
     private void toggleShowNBT(MinecraftClient client) {
         showNBT = !showNBT;
-        if (client.player != null) {
-            MutableText text = Text.translatable("text." + DevTools.MOD_ID
-                    + ".show-nbt." + (showNBT ? "enabled" : "disabled"));
-            client.player.sendMessage(text.formatted(showNBT ? Formatting.GREEN : Formatting.GRAY), true);
-        }
+        if (client.player == null) return;
+        MutableText text = Text.translatable("text." + DevTools.MOD_ID
+                + ".show-nbt." + (showNBT ? "enabled" : "disabled"));
+        client.player.sendMessage(text.formatted(showNBT ? Formatting.GREEN : Formatting.GRAY), true);
     }
 
     private void showNBTTooltipCallback(ItemStack stack, TooltipContext context, List<Text> lines) {
-        if (showNBT) {
-            NbtCompound nbt = stack.getNbt();
-            if (nbt != null) {
-                lines.addAll(Arrays.asList(Text.empty(), Text.literal("{").formatted(Formatting.GRAY)));
-                addNbtToTooltip(nbt, lines, "  ");
-                lines.add(Text.literal("}").formatted(Formatting.GRAY));
-            }
-        }
+        if (!showNBT) return;
+        NbtCompound nbt = stack.getNbt();
+        if (nbt == null) return;
+        lines.addAll(Arrays.asList(Text.empty(), Text.literal("{").formatted(Formatting.GRAY)));
+        addNbtToTooltip(nbt, lines, "  ");
+        lines.add(Text.literal("}").formatted(Formatting.GRAY));
     }
 
     private void addNbtToTooltip(NbtCompound nbt, List<Text> lines, String prefix) {
         for (String key : nbt.getKeys()) {
             NbtElement element = nbt.get(key);
             if (element instanceof NbtCompound) {
-                lines.add(Text.literal(prefix + key + ": {").formatted(Formatting.GRAY));
-                addNbtToTooltip((NbtCompound) element, lines, prefix + "  ");
-                lines.add(Text.literal(prefix + "}").formatted(Formatting.GRAY));
-
+                addCompoundToTooltip((NbtCompound) element, lines, prefix, key);
             } else if (element instanceof NbtList list) {
-                lines.add(Text.literal(prefix + key + ": [").formatted(Formatting.GRAY));
-                for (NbtElement nbtElement : list) {
-                    lines.add(Text.literal(prefix + "  " + nbtElement.asString()).formatted(Formatting.GRAY));
-                }
-                lines.add(Text.literal(prefix + "]").formatted(Formatting.GRAY));
+                addListToTooltip(list, lines, prefix, key);
             } else {
-                lines.add(Text.literal(prefix + key + ": " + element.asString()).formatted(Formatting.GRAY));
+                addSimpleElementToTooltip(element, lines, prefix, key);
             }
         }
+    }
+
+    private void addCompoundToTooltip(NbtCompound compound, List<Text> lines, String prefix, String key) {
+        lines.add(Text.literal(prefix + key + ": {").formatted(Formatting.GRAY));
+        addNbtToTooltip(compound, lines, prefix + "  ");
+        lines.add(Text.literal(prefix + "}").formatted(Formatting.GRAY));
+    }
+
+    private void addListToTooltip(NbtList list, List<Text> lines, String prefix, String key) {
+        lines.add(Text.literal(prefix + key + ": [").formatted(Formatting.GRAY));
+        for (NbtElement element : list) {
+            lines.add(Text.literal(prefix + "  " + element.asString()).formatted(Formatting.GRAY));
+        }
+        lines.add(Text.literal(prefix + "]").formatted(Formatting.GRAY));
+    }
+
+    private void addSimpleElementToTooltip(NbtElement element, List<Text> lines, String prefix, String key) {
+        lines.add(Text.literal(prefix + key + ": " + element.asString()).formatted(Formatting.GRAY));
     }
 
     @SuppressWarnings("SameParameterValue")
