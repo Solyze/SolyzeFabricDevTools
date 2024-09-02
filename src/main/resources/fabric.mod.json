@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "solyze-fabric-dev-tools",
+  "version": "${version}",
+  "name": "SolyzeFabricDevTools",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "GPL-3.0",
+  "icon": "assets/solyze-fabric-dev-tools/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "net.solyze.devtools.client.DevToolsClient"
+    ],
+    "main": [
+      "net.solyze.devtools.DevTools"
+    ]
+  },
+  "mixins": [
+    "solyze-fabric-dev-tools.mixins.json",
+    {
+      "config": "solyze-fabric-dev-tools.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}",
+    "fabric-key-binding-api-v1": "*"
+  }
+}

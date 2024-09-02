@@ -1,0 +1,9 @@
+.gradle
+**/build/
+!src/**/build/
+**/run/
+.idea
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+.gradletasknamecache

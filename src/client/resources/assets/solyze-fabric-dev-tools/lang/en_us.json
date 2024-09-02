@@ -1,0 +1,6 @@
+{
+  "key.solyze-fabric-dev-tools.show-nbt": "Toggle Tooltips NBT Data",
+  "category.solyze-fabric-dev-tools.tools": "Solyze's Developer Tools",
+  "text.solyze-fabric-dev-tools.show-nbt.enabled": "Now showing NBT data on item tooltips.",
+  "text.solyze-fabric-dev-tools.show-nbt.disabled": "No longer showing NBT data on item tooltips."
+}
