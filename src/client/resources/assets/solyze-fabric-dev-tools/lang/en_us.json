@@ -1,9 +1,18 @@
 {
+  "category.solyze-fabric-dev-tools.tools": "Solyze's Developer Tools",
+
   "key.solyze-fabric-dev-tools.show-nbt": "Toggle Tooltips NBT Data",
   "key.solyze-fabric-dev-tools.toggle-fullbright": "Toggle Fullbright",
-  "category.solyze-fabric-dev-tools.tools": "Solyze's Developer Tools",
+  "key.solyze-fabric-dev-tools.toggle-hud": "Toggle HUD",
+
   "text.solyze-fabric-dev-tools.show-nbt.enabled": "Now showing NBT data on item tooltips.",
   "text.solyze-fabric-dev-tools.show-nbt.disabled": "No longer showing NBT data on item tooltips.",
   "text.solyze-fabric-dev-tools.toggle-fullbright.enabled": "Fullbright is now enabled.",
-  "text.solyze-fabric-dev-tools.toggle-fullbright.disabled": "Fullbright is now disabled."
+  "text.solyze-fabric-dev-tools.toggle-fullbright.disabled": "Fullbright is now disabled.",
+  "text.solyze-fabric-dev-tools.toggle-hud.enabled": "DevTools HUD is now enabled.",
+  "text.solyze-fabric-dev-tools.toggle-hud.disabled": "DevTools HUD is now disabled.",
+
+  "text.solyze-fabric-dev-tools.screenshot.success": "Screenshot saved as %s",
+  "text.solyze-fabric-dev-tools.screenshot.failure": "Couldn't save screenshot: %s",
+  "text.solyze-fabric-dev-tools.screenshot.hover": "Click to open screenshot"
 }

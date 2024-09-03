@@ -1,11 +1,14 @@
 {
   "required": true,
-  "minVersion": "0.8",
-  "package": "net.solyze.devtools.mixin.client",
+  "package": "net.solyze.devtools.client.mixin",
   "compatibilityLevel": "JAVA_17",
-  "client": [
-  ],
+  "mixins": [],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "InGameHudMixin",
+    "ScreenshotRecorderMixin",
+    "SimpleOptionMixin"
+  ]
 }
