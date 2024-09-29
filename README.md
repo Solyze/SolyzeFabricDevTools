@@ -4,6 +4,8 @@ I wanted to create my own little Fabric mod to make my life easier when developi
 
 This is my first proper Fabric mod btw.
 
+Screenshots are outdated. They're from the 1.19.4 version.
+
 <p align="center">HUD (Toggle with U)</p>
 
 ![2024-09-03_22 14 36](https://github.com/user-attachments/assets/5676e244-1a3d-4387-bf3b-2ddf707bb3ff)
