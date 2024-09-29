@@ -1,10 +1,11 @@
 package net.solyze.devtools.client.keybind;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
 import net.solyze.devtools.DevTools;
 
@@ -27,7 +28,7 @@ public abstract class KeyHandler {
     public abstract void onWasPressed(MinecraftClient client);
     public void preCheckPress(MinecraftClient client) {}
     public void onInitializeClient() {}
-    public void itemTooltipCallback(ItemStack stack, TooltipContext context, List<Text> lines) {}
+    public void itemTooltipCallback(ItemStack stack, Item.TooltipContext context, TooltipType type, List<Text> lines) {}
 
     public int getKeyCode() {
         return keyCode;
