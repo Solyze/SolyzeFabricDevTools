@@ -6,7 +6,7 @@
   "key.solyze-fabric-dev-tools.toggle-hud": "Toggle HUD",
 
   "text.solyze-fabric-dev-tools.show-item-components.enabled": "Now showing item components on item tooltips.",
-  "text.solyze-fabric-dev-tools.show-item-components": "No longer showing item components on item tooltips.",
+  "text.solyze-fabric-dev-tools.show-item-components.disabled": "No longer showing item components on item tooltips.",
   "text.solyze-fabric-dev-tools.toggle-fullbright.enabled": "Fullbright is now enabled.",
   "text.solyze-fabric-dev-tools.toggle-fullbright.disabled": "Fullbright is now disabled.",
   "text.solyze-fabric-dev-tools.toggle-hud.enabled": "DevTools HUD is now enabled.",
