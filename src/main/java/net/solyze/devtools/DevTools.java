@@ -21,7 +21,7 @@ public class DevTools implements ModInitializer {
 
     public static final String MOD_ID = "solyze-fabric-dev-tools",
                                MOD_DISPLAY = "SolyzeFabricDevTools",
-                               MOD_VERSION = "v1.03";
+                               MOD_VERSION = "v1.04";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_DISPLAY);
 	public static DevTools INSTANCE;
 
