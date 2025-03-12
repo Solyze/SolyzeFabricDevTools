@@ -1,4 +1,4 @@
-# SolyzeFabricDevTools (1.21.1)
+# SolyzeFabricDevTools (1.21.4)
 
 I wanted to create my own little Fabric mod to make my life easier when developing.
 
