@@ -21,6 +21,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.solyze.devtools.DevTools;
 import net.solyze.devtools.client.keybind.handler.ToggleHudKeyHandler;
@@ -57,7 +58,8 @@ public abstract class InGameHudMixin {
         long freeMemory = Runtime.getRuntime().freeMemory();
 
         Matrix4f matrix4f = context.getMatrices().peek().getPositionMatrix();
-        VertexConsumerProvider.Immediate vertexConsumers = context.getVertexConsumers();
+        VertexConsumerProvider.Immediate vertexConsumers = MinecraftClient.getInstance()
+                .getBufferBuilders().getEntityVertexConsumers();
 
         this.y = -6; // Set to -6 to render the first text at 4, 4
         draw(textRenderer, matrix4f, vertexConsumers, Text.literal(String.format("%s %s",
@@ -92,7 +94,8 @@ public abstract class InGameHudMixin {
             ));
             if (client.world != null) {
                 BlockPos blockPos = client.cameraEntity.getBlockPos();
-                if (blockPos.getY() >= client.world.getBottomY() && blockPos.getY() < client.world.getTopY()) {
+                if (blockPos.getY() >= client.world.getBottomY() && blockPos.getY() <
+                        client.world.getTopY(Heightmap.Type.WORLD_SURFACE, blockPos.getX(), blockPos.getZ())) {
                     RegistryEntry<Biome> var27 = client.world.getBiome(blockPos);
                     draw(textRenderer, matrix4f, vertexConsumers, "Biome", getBiomeString(var27));
                 }
