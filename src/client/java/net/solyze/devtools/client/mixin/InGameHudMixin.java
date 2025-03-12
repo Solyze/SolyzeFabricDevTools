@@ -85,7 +85,7 @@ public abstract class InGameHudMixin {
         }
 
         draw(textRenderer, matrix4f, vertexConsumers, "CPU",
-                DevToolsClient.CPU_NAME + String.format(" (%s of %sMB)",
+                GlDebugInfo.getCpuInfo() + String.format(" (%s of %sMB)",
                 getMaxPercentageString((double) ((totalMemory - freeMemory) * 100L) / maxMemory),
                 toMiB(maxMemory)
         ));
