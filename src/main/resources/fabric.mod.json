@@ -4,7 +4,7 @@
   "version": "${version}",
   "name": "SolyzeFabricDevTools",
   "description": "",
-  "authors": [],
+  "authors": ["Solyze"],
   "contact": {},
   "license": "GPL-3.0",
   "icon": "assets/solyze-fabric-dev-tools/icon.png",

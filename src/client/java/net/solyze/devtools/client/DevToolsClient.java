@@ -15,6 +15,8 @@ import net.solyze.devtools.client.keybind.handler.ToggleFullbrightKeyHandler;
 import net.solyze.devtools.client.keybind.KeyHandler;
 import net.solyze.devtools.client.keybind.handler.ShowItemComponentsHandler;
 import net.solyze.devtools.client.keybind.handler.ToggleHudKeyHandler;
+import oshi.SystemInfo;
+import oshi.hardware.CentralProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ import java.util.List;
 public class DevToolsClient implements ClientModInitializer {
 
     public static DevToolsClient INSTANCE;
+    public static String CPU_NAME;
 
     private final List<KeyHandler> keyBindHandlers = new ArrayList<>();
 
@@ -36,6 +39,10 @@ public class DevToolsClient implements ClientModInitializer {
         this.registerKeyBindHandler(new ShowItemComponentsHandler());
         this.registerKeyBindHandler(new ToggleFullbrightKeyHandler());
         this.registerKeyBindHandler(new ToggleHudKeyHandler());
+
+        SystemInfo systemInfo = new SystemInfo();
+        CentralProcessor processor = systemInfo.getHardware().getProcessor();
+        CPU_NAME = processor.getProcessorIdentifier().getName();
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onEndClientTick);
         ItemTooltipCallback.EVENT.register(this::itemTooltipCallback);

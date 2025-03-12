@@ -24,6 +24,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.solyze.devtools.DevTools;
+import net.solyze.devtools.client.DevToolsClient;
 import net.solyze.devtools.client.keybind.handler.ToggleHudKeyHandler;
 import net.solyze.devtools.config.DevToolsDataConfig;
 import org.joml.Matrix4f;
@@ -33,6 +34,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import oshi.SystemInfo;
+import oshi.hardware.CentralProcessor;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -80,7 +83,9 @@ public abstract class InGameHudMixin {
                 draw(textRenderer, matrix4f, vertexConsumers, "Ping", ping);
             }
         }
-        draw(textRenderer, matrix4f, vertexConsumers, "CPU", GlDebugInfo.getCpuInfo() + String.format(" (%s of %sMB)",
+
+        draw(textRenderer, matrix4f, vertexConsumers, "CPU",
+                DevToolsClient.CPU_NAME + String.format(" (%s of %sMB)",
                 getMaxPercentageString((double) ((totalMemory - freeMemory) * 100L) / maxMemory),
                 toMiB(maxMemory)
         ));
