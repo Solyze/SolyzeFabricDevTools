@@ -8,7 +8,6 @@
   },
   "client": [
     "InGameHudMixin",
-    "ScreenshotRecorderMixin",
     "SimpleOptionMixin"
   ]
 }

@@ -1,6 +1,8 @@
 package net.solyze.devtools.client.mixin;
 
-import com.mojang.blaze3d.platform.GlDebugInfo;
+import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.systems.GpuDevice;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.ClientBrandRetriever;
@@ -9,9 +11,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.entity.Entity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
@@ -24,18 +24,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.solyze.devtools.DevTools;
-import net.solyze.devtools.client.DevToolsClient;
-import net.solyze.devtools.client.keybind.handler.ToggleHudKeyHandler;
 import net.solyze.devtools.config.DevToolsDataConfig;
-import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import oshi.SystemInfo;
-import oshi.hardware.CentralProcessor;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -60,39 +55,36 @@ public abstract class InGameHudMixin {
         long totalMemory = Runtime.getRuntime().totalMemory();
         long freeMemory = Runtime.getRuntime().freeMemory();
 
-        Matrix4f matrix4f = context.getMatrices().peek().getPositionMatrix();
-        VertexConsumerProvider.Immediate vertexConsumers = MinecraftClient.getInstance()
-                .getBufferBuilders().getEntityVertexConsumers();
-
         this.y = -6; // Set to -6 to render the first text at 4, 4
-        draw(textRenderer, matrix4f, vertexConsumers, Text.literal(String.format("%s %s",
+        draw(context, textRenderer, Text.literal(String.format("%s %s",
                 DevTools.MOD_DISPLAY,
                 DevTools.MOD_VERSION
         )).formatted(Formatting.GRAY));
-        draw(textRenderer, matrix4f, vertexConsumers, Text.literal(String.format("Minecraft %s (%s/%s)",
-                SharedConstants.getGameVersion().getName(),
+        draw(context, textRenderer, Text.literal(String.format("Minecraft %s (%s/%s)",
+                SharedConstants.getGameVersion().name(),
                 client.getGameVersion(),
                 ClientBrandRetriever.getClientModName()
         )).formatted(Formatting.GRAY));
         space(4);
-        draw(textRenderer, matrix4f, vertexConsumers, "FPS", client.getCurrentFps());
+        draw(context, textRenderer, "FPS", client.getCurrentFps());
         if (client.getNetworkHandler() != null && client.player != null) {
             PlayerListEntry entry = client.getNetworkHandler().getPlayerListEntry(client.player.getUuid());
             if (entry != null) {
                 String ping = entry.getLatency() + (client.isInSingleplayer() ? "ms (Singleplayer)" : "ms");
-                draw(textRenderer, matrix4f, vertexConsumers, "Ping", ping);
+                draw(context, textRenderer, "Ping", ping);
             }
         }
 
-        draw(textRenderer, matrix4f, vertexConsumers, "CPU",
-                GlDebugInfo.getCpuInfo() + String.format(" (%s of %sMB)",
+        draw(context, textRenderer, "CPU",
+                GLX._getCpuInfo() + String.format(" (%s of %sMB)",
                 getMaxPercentageString((double) ((totalMemory - freeMemory) * 100L) / maxMemory),
                 toMiB(maxMemory)
         ));
-        draw(textRenderer, matrix4f, vertexConsumers, "GPU", String.format("%s (%s)",
-                GlDebugInfo.getRenderer(), getMaxPercentageString(client.getGpuUtilizationPercentage())));
+        GpuDevice gpuDevice = RenderSystem.getDevice();
+        draw(context, textRenderer, "GPU", String.format("%s (%s)",
+                gpuDevice.getRenderer(), getMaxPercentageString(client.getGpuUtilizationPercentage())));
         if (client.cameraEntity != null) {
-            draw(textRenderer, matrix4f, vertexConsumers, "XYZ", String.format("%.2f / %.2f / %.2f",
+            draw(context, textRenderer, "XYZ", String.format("%.2f / %.2f / %.2f",
                     client.cameraEntity.getX(),
                     client.cameraEntity.getY(),
                     client.cameraEntity.getZ()
@@ -102,7 +94,7 @@ public abstract class InGameHudMixin {
                 if (blockPos.getY() >= client.world.getBottomY() && blockPos.getY() <
                         client.world.getTopY(Heightmap.Type.WORLD_SURFACE, blockPos.getX(), blockPos.getZ())) {
                     RegistryEntry<Biome> var27 = client.world.getBiome(blockPos);
-                    draw(textRenderer, matrix4f, vertexConsumers, "Biome", getBiomeString(var27));
+                    draw(context, textRenderer, "Biome", getBiomeString(var27));
                 }
             }
             Direction direction = client.cameraEntity.getHorizontalFacing();
@@ -114,13 +106,13 @@ public abstract class InGameHudMixin {
                 case EAST -> string2 = "+X";
                 default -> string2 = "Invalid";
             }
-            draw(textRenderer, matrix4f, vertexConsumers, "Facing", String.format("%s (%s) (%.2f / %.2f)",
+            draw(context, textRenderer, "Facing", String.format("%s (%s) (%.2f / %.2f)",
                     direction, string2,
                     MathHelper.wrapDegrees(client.cameraEntity.getYaw()),
                     MathHelper.wrapDegrees(client.cameraEntity.getPitch())
             ));
             if (System.getProperty("os.arch") != null) {
-                draw(textRenderer, matrix4f, vertexConsumers, "Java", String.format("%s %dbit",
+                draw(context, textRenderer, "Java", String.format("%s %dbit",
                         System.getProperty("java.version"),
                         System.getProperty("os.arch").contains("64") ? 64 : 32)
                 );
@@ -130,14 +122,14 @@ public abstract class InGameHudMixin {
                 BlockPos blockPos = ((BlockHitResult) blockHit).getBlockPos();
                 if (client.world != null) {
                     BlockState blockState = client.world.getBlockState(blockPos);
-                    draw(textRenderer, matrix4f, vertexConsumers, "Looking at", String.format("%s (%s / %s / %s)",
+                    draw(context, textRenderer, "Looking at", String.format("%s (%s / %s / %s)",
                             Registries.BLOCK.getId(blockState.getBlock()),
                             blockPos.getX(), blockPos.getY(), blockPos.getZ()
                     ));
                 }
             }
             if (client.targetedEntity != null) {
-                draw(textRenderer, matrix4f, vertexConsumers, "Targeted Entity",
+                draw(context, textRenderer, "Targeted Entity",
                         Registries.ENTITY_TYPE.getId(client.targetedEntity.getType()));
             }
         }
@@ -180,16 +172,16 @@ public abstract class InGameHudMixin {
     }
 
     @Unique
-    private void draw(TextRenderer textRenderer, Matrix4f matrix4f, VertexConsumerProvider vertexConsumers, Text text) {
+    private void draw(DrawContext context, TextRenderer textRenderer, Text text) {
         space(10);
-        textRenderer.draw(text, 4, this.y, 0xFFFFFF, true, matrix4f, vertexConsumers,
-                TextRenderer.TextLayerType.NORMAL, 0, 15728880);
+        int color = 0xFFFFFF;
+        int finalColor = ((230 & 0xFF) << 24) | (color & 0xFFFFFF);
+        context.drawText(textRenderer, text, 4, this.y, finalColor, true);
     }
 
     @Unique
-    private void draw(TextRenderer textRenderer, Matrix4f matrix4f,
-                      VertexConsumerProvider vertexConsumers, String name, Object value) {
-        draw(textRenderer, matrix4f, vertexConsumers, Text.literal(name).append(Text.literal(": "))
+    private void draw(DrawContext context, TextRenderer textRenderer, String name, Object value) {
+        draw(context, textRenderer, Text.literal(name).append(Text.literal(": "))
                 .append(Text.literal(value.toString()).formatted(Formatting.DARK_AQUA)));
     }
 
