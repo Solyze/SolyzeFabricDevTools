@@ -15,7 +15,7 @@ public class ToggleFullbrightKeyHandler extends KeyHandler {
     private double previousGamma = -Integer.MAX_VALUE;
 
     public ToggleFullbrightKeyHandler() {
-        super("toggle-fullbright", "tools", GLFW.GLFW_KEY_B);
+        super("toggle-fullbright", KeyHandler.TOOLS_CATEGORY, GLFW.GLFW_KEY_B);
     }
 
     @Override

@@ -21,7 +21,7 @@ import java.util.Set;
 public class ShowItemComponentsHandler extends KeyHandler {
 
     public ShowItemComponentsHandler() {
-        super("show-item-components", "tools", GLFW.GLFW_KEY_N);
+        super("show-item-components", KeyHandler.TOOLS_CATEGORY, GLFW.GLFW_KEY_N);
     }
 
     @Override

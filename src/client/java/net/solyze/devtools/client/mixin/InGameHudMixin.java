@@ -83,21 +83,21 @@ public abstract class InGameHudMixin {
         GpuDevice gpuDevice = RenderSystem.getDevice();
         draw(context, textRenderer, "GPU", String.format("%s (%s)",
                 gpuDevice.getRenderer(), getMaxPercentageString(client.getGpuUtilizationPercentage())));
-        if (client.cameraEntity != null) {
+        if (client.player != null) {
             draw(context, textRenderer, "XYZ", String.format("%.2f / %.2f / %.2f",
-                    client.cameraEntity.getX(),
-                    client.cameraEntity.getY(),
-                    client.cameraEntity.getZ()
+                    client.player.getX(),
+                    client.player.getY(),
+                    client.player.getZ()
             ));
             if (client.world != null) {
-                BlockPos blockPos = client.cameraEntity.getBlockPos();
+                BlockPos blockPos = client.player.getBlockPos();
                 if (blockPos.getY() >= client.world.getBottomY() && blockPos.getY() <
                         client.world.getTopY(Heightmap.Type.WORLD_SURFACE, blockPos.getX(), blockPos.getZ())) {
                     RegistryEntry<Biome> var27 = client.world.getBiome(blockPos);
                     draw(context, textRenderer, "Biome", getBiomeString(var27));
                 }
             }
-            Direction direction = client.cameraEntity.getHorizontalFacing();
+            Direction direction = client.player.getHorizontalFacing();
             String string2;
             switch (direction) {
                 case NORTH -> string2 = "-Z";
@@ -108,8 +108,8 @@ public abstract class InGameHudMixin {
             }
             draw(context, textRenderer, "Facing", String.format("%s (%s) (%.2f / %.2f)",
                     direction, string2,
-                    MathHelper.wrapDegrees(client.cameraEntity.getYaw()),
-                    MathHelper.wrapDegrees(client.cameraEntity.getPitch())
+                    MathHelper.wrapDegrees(client.player.getYaw()),
+                    MathHelper.wrapDegrees(client.player.getPitch())
             ));
             if (System.getProperty("os.arch") != null) {
                 draw(context, textRenderer, "Java", String.format("%s %dbit",
@@ -117,7 +117,7 @@ public abstract class InGameHudMixin {
                         System.getProperty("os.arch").contains("64") ? 64 : 32)
                 );
             }
-            HitResult blockHit = client.cameraEntity.raycast(20.0, 0.0F, false);
+            HitResult blockHit = client.player.raycast(20.0, 0.0F, false);
             if (!hasReducedDebugInfo(client) && blockHit.getType() == HitResult.Type.BLOCK) {
                 BlockPos blockPos = ((BlockHitResult) blockHit).getBlockPos();
                 if (client.world != null) {

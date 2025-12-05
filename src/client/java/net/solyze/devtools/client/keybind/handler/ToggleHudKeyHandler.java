@@ -12,7 +12,7 @@ import java.util.Optional;
 public class ToggleHudKeyHandler extends KeyHandler {
 
     public ToggleHudKeyHandler() {
-        super("toggle-hud", "tools", GLFW.GLFW_KEY_U);
+        super("toggle-hud", KeyHandler.TOOLS_CATEGORY, GLFW.GLFW_KEY_U);
     }
 
     @Override
